@@ -1,0 +1,87 @@
+
+Q.2) Write a program to implement DFS and BFS. Compare the time complexity
+
+
+#include <stdio.h>
+
+#define MAX 100
+
+int graph[MAX][MAX];
+int visited[MAX];
+int queue[MAX], front = 0, rear = -1;
+ 
+void enqueue(int v) {
+    queue[++rear] = v;
+}
+
+int dequeue() {
+    return queue[front++];
+}
+
+int isEmpty() {
+    return front > rear;
+}
+
+void BFS(int V, int start) {
+    for (int i = 0; i < V; i++)
+        visited[i] = 0;
+
+    front = 0; rear = -1;
+
+    enqueue(start);
+    visited[start] = 1;
+
+    printf("BFS Traversal: ");
+
+    while (!isEmpty()) {
+        int v = dequeue();
+        printf("%d ", v);
+
+        for (int i = 0; i < V; i++) {
+            if (graph[v][i] == 1 && !visited[i]) {
+                enqueue(i);
+                visited[i] = 1;
+            }
+        }
+    }
+    printf("\n");
+}
+ 
+void DFS(int V, int v) {
+    printf("%d ", v);
+    visited[v] = 1;
+
+    for (int i = 0; i < V; i++) {
+        if (graph[v][i] == 1 && !visited[i]) {
+            DFS(V, i);
+        }
+    }
+}
+
+int main() {
+    int V, start;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &V);
+
+    printf("Enter adjacency matrix:\n");
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    printf("Enter starting vertex: ");
+    scanf("%d", &start);
+ 
+    BFS(V, start);
+ 
+    for (int i = 0; i < V; i++)
+        visited[i] = 0;
+
+    printf("DFS Traversal: ");
+    DFS(V, start);
+    printf("\n");
+
+    return 0;
+}

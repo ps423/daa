@@ -1,0 +1,38 @@
+Q.2) Write a program to find out live node, E node and dead node from a given graph.
+
+// liveNode.c 
+#include <stdio.h> 
+#define MAX 10 
+int main() { 
+    int n, adj[MAX][MAX], visited[MAX] = {0}; 
+    printf("Enter number of vertices: "); 
+    scanf("%d", &n); 
+    printf("Enter adjacency matrix:\n");  
+ 
+    for (int i = 0; i < n; i++) 
+        for (int j = 0; j < n; j++) 
+            scanf("%d", &adj[i][j]); 
+    int stack[MAX], top = -1; 
+    int start = 0; 
+    stack[++top] = start; 
+    visited[start] = 1; 
+    printf("E-node (expanding node) is %d\n", start); 
+    while (top != -1) { 
+        int u = stack[top--]; 
+        printf("Processing node %d (E-node)\n", u); 
+        int childFound = 0; 
+        for (int v = 0; v < n; v++) { 
+            if (adj[u][v] && !visited[v]) { 
+                visited[v] = 1; 
+                stack[++top] = v; 
+                printf("  Live node %d generated\n", v); 
+                childFound = 1; 
+            } 
+        } 
+        if (!childFound) 
+            printf("Node %d becomes dead node (no unvisited children)\n", u); 
+        else 
+            printf("Node %d still has live children, remains E-node later\n", u); 
+    } 
+    return 0; 
+} 

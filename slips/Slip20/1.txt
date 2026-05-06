@@ -1,0 +1,74 @@
+Q.1) Write a program to implement for finding Topological sorting and determine the time
+complexity for the same.
+
+
+#include <stdio.h>
+#define MAX 100
+
+int graph[MAX][MAX];
+int indegree[MAX];
+int queue[MAX], front = 0, rear = -1;
+ 
+void enqueue(int x) {
+    queue[++rear] = x;
+}
+ 
+int dequeue() {
+    return queue[front++];
+}
+ 
+int isEmpty() {
+    return front > rear;
+}
+
+int main() {
+    int V;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &V);
+
+    printf("Enter adjacency matrix:\n");
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+ 
+    for (int i = 0; i < V; i++) {
+        indegree[i] = 0;
+        for (int j = 0; j < V; j++) {
+            if (graph[j][i] == 1)
+                indegree[i]++;
+        }
+    }
+ 
+    for (int i = 0; i < V; i++) {
+        if (indegree[i] == 0)
+            enqueue(i);
+    }
+
+    printf("Topological Order: ");
+
+    int count = 0;
+
+    while (!isEmpty()) {
+        int v = dequeue();
+        printf("%d ", v);
+
+        count++;
+ 
+        for (int i = 0; i < V; i++) {
+            if (graph[v][i] == 1) {
+                indegree[i]--;
+                if (indegree[i] == 0)
+                    enqueue(i);
+            }
+        }
+    }
+
+    if (count != V) {
+        printf("\nGraph is not a DAG (cycle exists)\n");
+    }
+
+    return 0;
+}

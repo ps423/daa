@@ -1,0 +1,85 @@
+Q.1) Write a program for the Implementation of Kruskal’s algorithm to find minimum
+cost spanning tree.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+struct Edge {
+    int u, v, weight;
+};
+
+struct Edge edges[MAX];
+int parent[MAX];
+
+int find(int i) {
+    while (parent[i] != i)
+        i = parent[i];
+    return i;
+}
+
+void union_set(int u, int v) {
+    int u_root = find(u);
+    int v_root = find(v);
+    parent[u_root] = v_root;
+}
+
+void sortEdges(int e) {
+    for (int i = 0; i < e - 1; i++) {
+        for (int j = 0; j < e - i - 1; j++) {
+            if (edges[j].weight > edges[j + 1].weight) {
+                struct Edge temp = edges[j];
+                edges[j] = edges[j + 1];
+                edges[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    int V, E;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &V);
+
+    printf("Enter number of edges: ");
+    scanf("%d", &E);
+
+    for (int i = 0; i < E; i++) {
+        printf("Enter edge %d (u v weight): ", i + 1);
+        scanf("%d %d %d", &edges[i].u, &edges[i].v, &edges[i].weight);
+    }
+
+    for (int i = 0; i < V; i++) {
+        parent[i] = i;
+    }
+
+    sortEdges(E);
+
+    int count = 0, i = 0;
+    int total_cost = 0;
+
+    printf("\nEdges in MST:\n");
+
+    while (count < V - 1 && i < E) {
+        int u = edges[i].u;
+        int v = edges[i].v;
+
+        int set_u = find(u);
+        int set_v = find(v);
+
+        if (set_u != set_v) {
+            printf("%d -- %d == %d\n", u, v, edges[i].weight);
+            total_cost += edges[i].weight;
+            union_set(set_u, set_v);
+            count++;
+        }
+        i++;
+    }
+
+    printf("Total cost of MST = %d\n", total_cost);
+
+    return 0;
+}
